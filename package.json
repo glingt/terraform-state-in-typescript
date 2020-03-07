@@ -1,8 +1,9 @@
 {
   "name": "terraform-state-in-typescript",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Define your Terraform state in Typescript",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
