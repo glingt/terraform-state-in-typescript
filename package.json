@@ -1,12 +1,12 @@
 {
   "name": "terraform-state-in-typescript",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Define your Terraform state in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "prepublish": "tsc",
+  "prepublish": "tsc -p .",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc -p . "
   },
   "author": "Nils Eriksson",
   "license": "MIT",
