@@ -11,6 +11,7 @@
   "author": "Nils Eriksson",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^13.9.0"
+    "@types/node": "^13.9.0",
+    "typescript": "^3.8.3"
   }
 }
