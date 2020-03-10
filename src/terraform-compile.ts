@@ -1,9 +1,10 @@
 import * as fs from "fs";
-import { flush } from "./terraform";
-// import { exec } from 'child_process';
-// import { promisify } from 'util';
+import * as path from "path";
+import * as tsnode from "ts-node";
+import { TerraformElement } from "./terraform";
+import { createFileContent } from "./terraform-generator";
 
-// const execAsync = promisify(exec);
+tsnode.register({ /* options */ });
 
 const files = fs.readdirSync("./terraform-ts").filter(file => file.endsWith(".tf.ts"));
 
@@ -11,12 +12,15 @@ if (files.length === 0) {
   throw new Error("No terraform ts files found.");
 }
 
-files.forEach(file => {
+files.forEach(filename => {
+  const file = path.resolve("./terraform-ts/", filename);
   console.log(file);
-  require("../terraform-ts/" + file);
-  const outputFile = "./terraform/" + file.substr(0, file.length - 6) + ".generated.tf";
-  const fileContent = flush();
-  fs.writeFileSync(outputFile, fileContent);
-});
 
-// execAsync("terraform plan");
+  let buffer: string = "";
+
+  const element: TerraformElement = require(file).default;
+  buffer += createFileContent(element);
+  buffer += "\n";
+  const outputFile = "./terraform/" + filename.substr(0, filename.length - 6) + ".generated.tf";
+  fs.writeFileSync(outputFile, buffer);
+});
