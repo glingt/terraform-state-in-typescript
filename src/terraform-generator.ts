@@ -1,4 +1,4 @@
-import { TerraformElement, CData, Node } from "./terraform";
+import { TerraformElement, CData, JsonEncode, Node } from "./terraform";
 import { isObject, isString } from "util";
 
 const toString = (cd: CData) => `<<${cd.name}\n${JSON.stringify(cd.data, undefined, 2)}\n${cd.name}`;
@@ -16,6 +16,12 @@ const writeVar = (indent: string = "", varName: string | undefined, b: Node) => 
     str += `${indent}${varName || ""}`;
     str += writeAssignment(varName);
     str += toString(b);
+  } else if (b instanceof JsonEncode) {
+    str += `${indent}${varName || ""}`;
+    str += writeAssignment(varName);
+    str += "<<EOF\n";
+    str += JSON.stringify(b.data) + "\n";
+    str += "EOF\n";
   } else if (Array.isArray(b)) {
     if ((b as any).spread) {
       b.forEach(item => {

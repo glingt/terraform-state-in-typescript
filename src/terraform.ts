@@ -8,7 +8,12 @@ export class CData {
   constructor(public name: string, public data: {}) {}
 }
 
+export class JsonEncode {
+  constructor(public data: {}) {}
+}
+
 export const cdata = (name: string, content: {}): {} => new CData(name, content);
+export const jsonencode = (content: {}): {} => new JsonEncode(content);
 
 export type BaseNode = string | CData | { [key: string]: BaseNode };
 
