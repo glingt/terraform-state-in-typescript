@@ -22,11 +22,11 @@ export type AwsS3Bucket = {
 
   tags?: { [key: string]: string };
   policy?: Policy;
-} & ({} | { acl: string } | { grant: object });
+} & ({} | { acl: string } | { grant: {} });
 
-interface AwsCloudfrontDistribution {}
+type AwsCloudfrontDistribution = {};
 
-interface ARecord {
+type ARecord = {
   name: string;
   type: "A";
   alias: {
@@ -34,14 +34,14 @@ interface ARecord {
     name: string;
     evaluate_target_health: boolean;
   };
-}
+};
 
-interface CNameRecord {
+type CNameRecord = {
   name: string;
   type: "CNAME";
   ttl: string;
   records: string[];
-}
+};
 
 type AwsRoute53Record = Record & { zone_id: string };
 

@@ -1,5 +1,5 @@
 import { TerraformElement, CData, JsonEncode, Node } from "./terraform";
-import { isObject, isString } from "util";
+import { isString, isNumber, isBoolean } from "util";
 
 const toString = (cd: CData) => `<<${cd.name}\n${JSON.stringify(cd.data, undefined, 2)}\n${cd.name}`;
 
@@ -36,11 +36,11 @@ const writeVar = (indent: string = "", varName: string | undefined, b: Node) => 
       });
       str += `\n${indent}]`;
     }
-  } else if (isString(b)) {
+  } else if (isString(b) || isNumber(b) || isBoolean(b)) {
     str += `${indent}${varName || ""}`;
     str += writeAssignment(varName);
     str += `\"${b}\"`;
-  } else if (isObject(b)) {
+  } else if (typeof b === "object") {
     str += `${indent}${varName || ""}`;
     if (b["_isValue"]) {
       str += " = ";

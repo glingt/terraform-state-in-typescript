@@ -15,11 +15,11 @@ export class JsonEncode {
 export const cdata = (name: string, content: {}): {} => new CData(name, content);
 export const jsonencode = (content: {}): {} => new JsonEncode(content);
 
-export type BaseNode = string | CData | { [key: string]: BaseNode };
+export type BaseNode = boolean | number | string | undefined | CData | { [key: string]: Node };
 
 export type Node = BaseNode | BaseNode[];
 
-export const resource = (resourceType: string, resourceIdRaw: string, definition: any): ResourceElement => {
+export const resource = (resourceType: string, resourceIdRaw: string, definition: Node): ResourceElement => {
   const resourceId = resourceIdRaw.replace(/\./g, "_");
   return {
     type: "resource",
