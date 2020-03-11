@@ -42,9 +42,7 @@ export default compositeElement(
 // package.json
 
 "scripts": {
-    "build": "node ./node_modules/terraform-state-in-typescript/dist/terraform-compile
-              ./src/my-infrastructure.ts
-              ./my-infrastructure.tf",
+    "build": "terraform-state-in-typescript ./src/my-infrastructure.ts ./my-infrastructure.tf",
     ...
   },
 ```
@@ -56,3 +54,5 @@ export default compositeElement(
 > yarn build
 > terraform apply
 ```
+
+Done! You have deployed two websites in the cloud!

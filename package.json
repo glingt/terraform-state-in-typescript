@@ -4,6 +4,7 @@
   "description": "Define your Terraform state in Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": "dist/terraform-compile.js",
   "prepublish": "tsc -p .",
   "scripts": {
     "build": "tsc -p . ",
