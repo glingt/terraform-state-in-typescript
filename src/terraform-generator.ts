@@ -1,5 +1,6 @@
-import { TerraformElement, CData, JsonEncode, Node } from "./terraform";
+import { TerraformElement } from "./terraform-elements";
 import { isString, isNumber, isBoolean } from "util";
+import { CData, JsonEncode, Node, Multiple, Value } from "./terraform-primitives";
 
 const toString = (cd: CData) => `<<${cd.name}\n${JSON.stringify(cd.data, undefined, 2)}\n${cd.name}`;
 
@@ -10,6 +11,16 @@ const writeAssignment = (varName: string | undefined) => {
   return "";
 };
 
+const writeObject = (indent: string, b: any) => {
+  let str = "";
+  str += " {\n";
+  Object.keys(b).forEach(key => {
+    str += writeVar(`${indent}  `, `${key}`, b[key]);
+    str += "\n";
+  });
+  str += `${indent}}`;
+  return str;
+};
 const writeVar = (indent: string = "", varName: string | undefined, b: Node) => {
   let str: string = "";
   if (b instanceof CData) {
@@ -22,37 +33,30 @@ const writeVar = (indent: string = "", varName: string | undefined, b: Node) => 
     str += "<<EOF\n";
     str += JSON.stringify(b.data) + "\n";
     str += "EOF\n";
+  } else if (b instanceof Multiple) {
+    b.items.forEach(item => {
+      str += `\n${writeVar(`${indent}`, varName, item)}`;
+    });
+  } else if (b instanceof Value) {
+    str += `${indent}${varName || ""} = `;
+    str += writeObject(indent, b.data);
   } else if (Array.isArray(b)) {
-    if ((b as any).spread) {
-      b.forEach(item => {
-        str += `\n${writeVar(`${indent}`, varName, item)}`;
-      });
-    } else {
-      str += `${indent}${varName || ""}`;
-      str += writeAssignment(varName);
-      str += "[";
-      b.forEach(item => {
-        str += `\n${writeVar(`${indent}  `, undefined, item)},`;
-      });
-      str += `\n${indent}]`;
-    }
-  } else if (isString(b) || isNumber(b) || isBoolean(b)) {
+    str += `${indent}${varName || ""}`;
+    str += writeAssignment(varName);
+    str += "[";
+    str += b.map(item => `\n${writeVar(`${indent}  `, undefined, item)},`).join("");
+    str += `\n${indent}]`;
+  } else if (isString(b)) {
     str += `${indent}${varName || ""}`;
     str += writeAssignment(varName);
     str += `\"${b}\"`;
+  } else if (isNumber(b) || isBoolean(b)) {
+    str += `${indent}${varName || ""}`;
+    str += writeAssignment(varName);
+    str += `${b}`;
   } else if (typeof b === "object") {
     str += `${indent}${varName || ""}`;
-    if (b["_isValue"]) {
-      str += " = ";
-    }
-    str += " {\n";
-    Object.keys(b)
-      .filter(key => !key.startsWith("_"))
-      .forEach(key => {
-        str += writeVar(`${indent}  `, `${key}`, b[key]);
-        str += "\n";
-      });
-    str += `${indent}}`;
+    str += writeObject(indent, b);
   } else {
     str += `${indent}${varName || ""}`;
     str += writeAssignment(varName);

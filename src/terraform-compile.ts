@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as tsnode from "ts-node";
-import { TerraformElement } from "./terraform";
+import { TerraformElement } from "./terraform-elements";
 import { createFileContent } from "./terraform-generator";
 
 tsnode.register({

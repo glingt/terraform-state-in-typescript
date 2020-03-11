@@ -1,14 +1,6 @@
-import {
-  resource,
-  ResourceElement,
-  VarElement,
-  user_var,
-  compositeElement,
-  asValue,
-  multiple,
-  cdata,
-} from "./terraform";
+import { ResourceElement, VarElement } from "./terraform-elements";
 
+import { asValue, multiple, cdata, user_var, compositeElement, resource } from "./terraform-blocks";
 type Policy = any;
 type Record = ARecord | CNameRecord;
 
