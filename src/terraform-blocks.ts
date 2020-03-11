@@ -8,7 +8,7 @@ export const asValue = (b: Node) => new Value(b);
 export const resource = (resourceType: string, resourceIdRaw: string, definition: Node): ResourceElement => ({
   type: "resource",
   resourceType,
-  resourceId: [".", "-"].reduce((aggr, elem) => aggr.split(elem).join("_"), resourceIdRaw),
+  resourceId: ["."].reduce((aggr, elem) => aggr.split(elem).join("_"), resourceIdRaw),
   definition,
 });
 

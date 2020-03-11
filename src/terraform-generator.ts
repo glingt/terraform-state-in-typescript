@@ -14,7 +14,9 @@ const writeAssignment = (varName: string | undefined) => {
 const writeObject = (indent: string, b: any) =>
   [" {", ...Object.keys(b).map(key => writeVar(`${indent}  `, key, b[key])), `${indent}}`].join("\n");
 
-const writeVar = (indent: string = "", varName: string | undefined, b: Node): string => {
+const writeVar = (indent: string = "", key: string | undefined, b: Node): string => {
+  const varName = key !== undefined && key.indexOf(":") !== -1 ? `\"${key}\"` : key;
+
   if (b instanceof CData) {
     return [`${indent}${varName || ""}`, writeAssignment(varName), toString(b)].join("");
   }
