@@ -1,10 +1,11 @@
 import { ResourceElement, VarElement, TerraformElement } from "./terraform-elements";
-import { JsonEncode, CData, Multiple, Value, Node } from "./terraform-primitives";
+import { JsonEncode, CData, Multiple, Value, Reference, Node } from "./terraform-primitives";
 
 export const cdata = (name: string, content: {}): {} => new CData(name, content);
 export const jsonencode = (content: {}): {} => new JsonEncode(content);
 export const multiple = <T>(...items: T[]) => new Multiple(items);
 export const asValue = (b: Node) => new Value(b);
+export const asReference = (b: string) => new Reference(b);
 export const resource = (resourceType: string, resourceIdRaw: string, definition: Node): ResourceElement => ({
   type: "resource",
   resourceType,

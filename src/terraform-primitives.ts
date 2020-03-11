@@ -14,6 +14,10 @@ export class Value {
   constructor(public data: Node) {}
 }
 
+export class Reference {
+  constructor(public data: string) {}
+}
+
 export type BaseNode =
   | boolean
   | number
@@ -22,6 +26,7 @@ export type BaseNode =
   | CData
   | JsonEncode
   | Value
+  | Reference
   | Multiple<any>
   | { [key: string]: Node };
 

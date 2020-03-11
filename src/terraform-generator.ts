@@ -1,6 +1,6 @@
 import { TerraformElement } from "./terraform-elements";
 import { isString, isNumber, isBoolean } from "util";
-import { CData, JsonEncode, Node, Multiple, Value } from "./terraform-primitives";
+import { CData, JsonEncode, Node, Multiple, Value, Reference } from "./terraform-primitives";
 
 const toString = (cd: CData) => `<<${cd.name}\n${JSON.stringify(cd.data, undefined, 2)}\n${cd.name}`;
 
@@ -12,13 +12,13 @@ const writeAssignment = (varName: string | undefined) => {
 };
 
 const writeObject = (indent: string, b: any) =>
-  [" {", ...Object.keys(b).map(key => writeVar(`${indent}  `, key, b[key])), `${indent}}`].join("\n");
+  ["{", ...Object.keys(b).map(key => writeVar(`${indent}  `, key, b[key])), `${indent}}`].join("\n");
 
 const writeVar = (indent: string = "", key: string | undefined, b: Node): string => {
   const varName = key !== undefined && key.indexOf(":") !== -1 ? `\"${key}\"` : key;
 
   if (b instanceof CData) {
-    return [`${indent}${varName || ""}`, writeAssignment(varName), toString(b)].join("");
+    return `${indent}${varName || ""}${writeAssignment(varName)}${toString(b)}`;
   }
 
   if (b instanceof JsonEncode) {
@@ -36,7 +36,11 @@ const writeVar = (indent: string = "", key: string | undefined, b: Node): string
   }
 
   if (b instanceof Value) {
-    return [`${indent}${varName || ""} = `, writeObject(indent, b.data)].join("");
+    return `${indent}${varName || ""} = ${writeObject(indent, b.data)}`;
+  }
+
+  if (b instanceof Reference) {
+    return `${indent}${varName || ""} = ${b.data}`;
   }
 
   if (Array.isArray(b)) {
@@ -50,18 +54,18 @@ const writeVar = (indent: string = "", key: string | undefined, b: Node): string
   }
 
   if (isString(b)) {
-    return [`${indent}${varName || ""}`, writeAssignment(varName), `\"${b}\"`].join("");
+    return `${indent}${varName || ""}${writeAssignment(varName)}\"${b}\"`;
   }
 
   if (isNumber(b) || isBoolean(b)) {
-    return [`${indent}${varName || ""}`, writeAssignment(varName), `${b}`].join("");
+    return `${indent}${varName || ""}${writeAssignment(varName)}${b}`;
   }
 
   if (typeof b === "object") {
-    return [`${indent}${varName || ""}`, writeObject(indent, b)].join("");
+    return `${indent}${varName || ""} ${writeObject(indent, b)}`;
   }
 
-  return [`${indent}${varName || ""}`, writeAssignment(varName), b].join("");
+  return `${indent}${varName || ""}${writeAssignment(varName)}${b}`;
 };
 
 export const createFileContent = (element: TerraformElement): string => {
