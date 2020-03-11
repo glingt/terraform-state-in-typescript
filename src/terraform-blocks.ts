@@ -5,15 +5,12 @@ export const cdata = (name: string, content: {}): {} => new CData(name, content)
 export const jsonencode = (content: {}): {} => new JsonEncode(content);
 export const multiple = <T>(...items: T[]) => new Multiple(items);
 export const asValue = (b: Node) => new Value(b);
-export const resource = (resourceType: string, resourceIdRaw: string, definition: Node): ResourceElement => {
-  const resourceId = resourceIdRaw.replace(/\./g, "_");
-  return {
-    type: "resource",
-    resourceType,
-    resourceId,
-    definition,
-  };
-};
+export const resource = (resourceType: string, resourceIdRaw: string, definition: Node): ResourceElement => ({
+  type: "resource",
+  resourceType,
+  resourceId: [".", "-"].reduce((aggr, elem) => aggr.split(elem).join("_"), resourceIdRaw),
+  definition,
+});
 
 export const user_var = (name: string, definition: { [key: string]: string }): VarElement => ({
   type: "var",
