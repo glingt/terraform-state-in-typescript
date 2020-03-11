@@ -26,7 +26,7 @@ const writeVar = (indent: string = "", key: string | undefined, b: Node): string
       `${indent}${varName || ""}`,
       writeAssignment(varName),
       "<<EOF\n",
-      JSON.stringify(b.data) + "\n",
+      JSON.stringify(b.data, null, 2) + "\n",
       "EOF\n",
     ].join("");
   }
