@@ -19,7 +19,7 @@ export const user_var = (name: string, definition: { [key: string]: string }): V
   definition,
 });
 
-export const compositeElement = (...elements: TerraformElement[]): TerraformElement => ({
+export const composite = (...elements: TerraformElement[]): TerraformElement => ({
   type: "composite",
   elements,
 });

@@ -9,7 +9,7 @@ Define your Terraform state in Typescript
 ```
 // my-infrastructure.ts
 
-import { compositeElement, resource } from "terraform-state-in-typescript";
+import { composite, resource } from "terraform-state-in-typescript";
 
 // Define your custom building blocks
 const domain = (id: string, name: string) =>
@@ -22,14 +22,14 @@ const cdn = (id: string, domain: string) =>
   resource("aws_cloudfront_distribution", id, { alias: [domain] });
 
 const website = (id: string, address: string) =>
-  compositeElement(
+  composite(
     domain(id, address),
     storage(id, address),
     cdn(id, address)
   );
 
 // Export your infrastructure
-export default compositeElement(
+export default composite(
    website("my_primary_website", "example.com"),
    website("my_customer_portal", "example2.com"),
 )
