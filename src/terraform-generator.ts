@@ -15,6 +15,9 @@ const writeObject = (indent: string, b: any) =>
   ["{", ...Object.keys(b).map(key => writeVar(`${indent}  `, key, b[key])), `${indent}}`].join("\n");
 
 const writeVar = (indent: string = "", key: string | undefined, b: Node): string => {
+  if (b === undefined) {
+    return `${indent}`;
+  }
   const varName = key !== undefined && key.indexOf(":") !== -1 ? `\"${key}\"` : key;
 
   if (b instanceof CData) {
